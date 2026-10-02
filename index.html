@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPI IPA: Perubahan Wujud Zat - MTs Gorontalo</title>
+    
+    <!-- Memuat Tailwind CSS untuk styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Konfigurasi Tema Warna Khusus -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            yellow: '#FBBF24', // Kuning
+                            green: '#16A34A', // Hijau
+                            tosca: '#14B8A6', // Hijau Toska
+                            white: '#FFFFFF', // Putih
+                            dark: '#1F2937'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* CSS tambahan untuk animasi dan elemen khusus */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0fdf4; /* Light green background */
+        }
+
+        .tab-btn {
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background-color: #14B8A6; /* Tosca */
+            color: #FFFFFF;
+            border-bottom: 4px solid #16A34A; /* Green */
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Slider Kustom */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 32px;
+            width: 32px;
+            border-radius: 50%;
+            background: #FBBF24;
+            cursor: pointer;
+            margin-top: -12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            border: 3px solid #16A34A;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 10px;
+            cursor: pointer;
+            background: #14B8A6;
+            border-radius: 5px;
+        }
+        
+        .quiz-btn {
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        .quiz-btn:hover {
+            transform: scale(1.02);
+        }
+        .quiz-btn:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body class="text-brand-dark overflow-x-hidden min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-brand-green text-brand-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <!-- Ikon Sains Sederhana (SVG) -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-brand-yellow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                </svg>
+                <div>
+                    <h1 class="text-2xl font-bold text-brand-yellow tracking-wide">JELAJAH ZAT</h1>
+                    <p class="text-sm text-brand-white opacity-90">IPA Kelas VII - MTs Gorontalo</p>
+                </div>
+            </div>
+            
+            <!-- Navigasi Tabs (Jersey Style: White & Tosca) -->
+            <div class="flex space-x-2 bg-white rounded-lg p-1 shadow-inner">
+                <button onclick="openTab('simulasi')" class="tab-btn active px-4 py-2 rounded-md font-semibold text-brand-tosca bg-brand-white">Simulasi</button>
+                <button onclick="openTab('materi')" class="tab-btn px-4 py-2 rounded-md font-semibold text-brand-tosca bg-brand-white">Materi</button>
+                <button onclick="openTab('kuis')" class="tab-btn px-4 py-2 rounded-md font-semibold text-brand-tosca bg-brand-white">Kuis Kelompok</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Konten Utama -->
+    <main class="flex-grow w-full max-w-5xl mx-auto p-4 md:p-6">
+        
+        <!-- TAB 1: SIMULASI INTERAKTIF -->
+        <section id="simulasi" class="tab-content active">
+            <div class="bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-brand-green">
+                <div class="bg-brand-tosca p-4 text-white text-center">
+                    <h2 class="text-xl font-bold">Laboratorium Virtual: Kendali Suhu H<sub>2</sub>O</h2>
+                    <p class="text-sm mt-1">Geser pengatur suhu di bawah ini untuk melihat pergerakan partikel air!</p>
+                </div>
+                
+                <div class="p-6 flex flex-col md:flex-row gap-8 items-center justify-center">
+                    <!-- Kanvas Animasi Partikel -->
+                    <div class="relative bg-blue-50 border-4 border-brand-yellow rounded-xl overflow-hidden w-full max-w-sm h-80 shadow-inner">
+                        <canvas id="particleCanvas" width="350" height="300" class="w-full h-full"></canvas>
+                        <!-- Overlay Suhu -->
+                        <div class="absolute top-2 left-2 bg-brand-dark/70 text-brand-yellow px-3 py-1 rounded-full font-bold text-lg shadow">
+                            <span id="tempDisplay">20</span> °C
+                        </div>
+                        <div class="absolute top-2 right-2 px-3 py-1 rounded-full font-bold text-sm shadow text-white" id="stateBadge" style="background-color: #3B82F6;">
+                            Cair
+                        </div>
+                    </div>
+
+                    <!-- Kontrol Panel -->
+                    <div class="flex-1 w-full flex flex-col justify-center bg-green-50 p-6 rounded-xl border border-green-200">
+                        <h3 class="text-lg font-bold text-brand-green mb-4">Pengatur Suhu (Termometer)</h3>
+                        
+                        <input type="range" id="tempSlider" min="-20" max="120" value="20" class="w-full mb-6">
+                        
+                        <div class="flex justify-between text-sm font-semibold text-gray-500 mb-6">
+                            <span>-20°C (Dingin)</span>
+                            <span>120°C (Panas)</span>
+                        </div>
+
+                        <!-- Panel Feedback Interaktif -->
+                        <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-brand-yellow">
+                            <h4 class="font-bold text-brand-dark flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-brand-yellow" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                                </svg>
+                                Analisis Wujud:
+                            </h4>
+                            <p id="feedbackText" class="mt-2 text-sm text-gray-700 leading-relaxed">
+                                Suhu saat ini berada di atas titik beku dan di bawah titik didih. Partikel air bergerak bebas namun masih berdekatan. Wujudnya adalah <strong>Cair</strong>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: MATERI -->
+        <section id="materi" class="tab-content">
+            <div class="bg-white rounded-2xl shadow-xl overflow-hidden p-6 border-t-8 border-brand-yellow">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-extrabold text-brand-green">Perubahan Wujud Zat</h2>
+                    <p class="text-gray-600 mt-2 max-w-2xl mx-auto">Zat dapat berubah dari satu wujud ke wujud lain jika menyerap atau melepaskan kalor (panas). Mari pelajari fenomena ini di lingkungan sekitar kita di Gorontalo!</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Menyerap Kalor -->
+                    <div class="col-span-full mb-2">
+                        <h3 class="text-xl font-bold text-red-500 bg-red-50 py-2 px-4 rounded-lg inline-block border border-red-200">🔥 Proses Menyerap Kalor (Panas)</h3>
+                    </div>
+
+                    <!-- Mencair -->
+                    <div class="bg-yellow-50 rounded-xl p-5 border border-yellow-200 hover:shadow-md transition">
+                        <h4 class="text-lg font-bold text-yellow-700 mb-2">1. Mencair (Padat → Cair)</h4>
+                        <p class="text-sm text-gray-700 mb-3">Peristiwa perubahan wujud padat menjadi cair karena zat menerima energi panas.</p>
+                        <div class="bg-white p-3 rounded text-sm text-gray-600 italic border-l-2 border-yellow-400">
+                            <strong>Konteks Gorontalo:</strong> Saat siang hari yang terik di pesisir Kota Gorontalo, es batu di dalam minuman es kelapa mudamu akan cepat mencair menjadi air karena panas lingkungan.
+                        </div>
+                    </div>
+
+                    <!-- Menguap -->
+                    <div class="bg-yellow-50 rounded-xl p-5 border border-yellow-200 hover:shadow-md transition">
+                        <h4 class="text-lg font-bold text-yellow-700 mb-2">2. Menguap (Cair → Gas)</h4>
+                        <p class="text-sm text-gray-700 mb-3">Perubahan wujud cair menjadi gas akibat penambahan kalor.</p>
+                        <div class="bg-white p-3 rounded text-sm text-gray-600 italic border-l-2 border-yellow-400">
+                            <strong>Konteks Gorontalo:</strong> Para nelayan di pesisir Teluk Tomini menjemur Ikan Nike. Panas matahari membuat air pada ikan menguap, sehingga ikan menjadi kering.
+                        </div>
+                    </div>
+
+                    <!-- Menyublim -->
+                    <div class="bg-yellow-50 rounded-xl p-5 border border-yellow-200 hover:shadow-md transition">
+                        <h4 class="text-lg font-bold text-yellow-700 mb-2">3. Menyublim (Padat → Gas)</h4>
+                        <p class="text-sm text-gray-700 mb-3">Perubahan wujud dari padat langsung menjadi gas tanpa melalui fase cair.</p>
+                        <div class="bg-white p-3 rounded text-sm text-gray-600 italic border-l-2 border-yellow-400">
+                            <strong>Contoh:</strong> Kapur barus yang diletakkan di dalam lemari pakaian lama-kelamaan akan mengecil dan habis karena berubah wujud menjadi gas berbau harum.
+                        </div>
+                    </div>
+
+                    <!-- Melepas Kalor -->
+                    <div class="col-span-full mt-4 mb-2">
+                        <h3 class="text-xl font-bold text-blue-500 bg-blue-50 py-2 px-4 rounded-lg inline-block border border-blue-200">❄️ Proses Melepaskan Kalor (Dingin)</h3>
+                    </div>
+
+                    <!-- Membeku -->
+                    <div class="bg-blue-50 rounded-xl p-5 border border-blue-200 hover:shadow-md transition">
+                        <h4 class="text-lg font-bold text-blue-700 mb-2">4. Membeku (Cair → Padat)</h4>
+                        <p class="text-sm text-gray-700 mb-3">Peristiwa zat cair melepaskan kalor sehingga suhunya turun dan menjadi padat.</p>
+                        <div class="bg-white p-3 rounded text-sm text-gray-600 italic border-l-2 border-blue-400">
+                            <strong>Contoh:</strong> Masukkan air tawar ke dalam freezer kulkas. Karena suhunya sangat dingin, air melepaskan kalornya dan membeku menjadi es.
+                        </div>
+                    </div>
+
+                    <!-- Mengembun -->
+                    <div class="bg-blue-50 rounded-xl p-5 border border-blue-200 hover:shadow-md transition">
+                        <h4 class="text-lg font-bold text-blue-700 mb-2">5. Mengembun (Gas → Cair)</h4>
+                        <p class="text-sm text-gray-700 mb-3">Perubahan wujud gas menjadi cair ketika gas mengalami pendinginan (melepas kalor).</p>
+                        <div class="bg-white p-3 rounded text-sm text-gray-600 italic border-l-2 border-blue-400">
+                            <strong>Konteks Gorontalo:</strong> Pagi hari yang sangat sejuk di daerah perbukitan Suwawa atau Gunung Jala, uap air di udara mendingin dan berubah menjadi titik-titik embun di dedaunan.
+                        </div>
+                    </div>
+
+                    <!-- Mengkristal -->
+                    <div class="bg-blue-50 rounded-xl p-5 border border-blue-200 hover:shadow-md transition">
+                        <h4 class="text-lg font-bold text-blue-700 mb-2">6. Mengkristal (Gas → Padat)</h4>
+                        <p class="text-sm text-gray-700 mb-3">Peristiwa gas berubah langsung menjadi padatan akibat pelepasan kalor yang ekstrem.</p>
+                        <div class="bg-white p-3 rounded text-sm text-gray-600 italic border-l-2 border-blue-400">
+                            <strong>Contoh:</strong> Pembentukan butiran salju di awan, atau gas belerang pada kawah gunung berapi yang mengendap menjadi kristal belerang kuning padat.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: KUIS KELOMPOK -->
+        <section id="kuis" class="tab-content">
+            <div class="bg-white rounded-2xl shadow-xl border-2 border-brand-tosca max-w-3xl mx-auto overflow-hidden">
+                <!-- Header Kuis -->
+                <div class="bg-brand-tosca p-6 text-center">
+                    <h2 class="text-2xl font-bold text-white mb-2">Tantangan Kelompok!</h2>
+                    <p class="text-brand-yellow font-semibold bg-brand-dark/20 inline-block px-4 py-1 rounded-full text-sm">Raih skor tertinggi untuk tim kalian!</p>
+                </div>
+                
+                <div class="p-6 md:p-10">
+                    <!-- Tampilan Awal Kuis & Form Identitas -->
+                    <div id="quizStart" class="text-center max-w-md mx-auto">
+                        <p class="text-gray-700 mb-6 text-lg">Ada 10 pertanyaan menantang terkait lingkungan sekitar kita. Silakan isi data diri/kelompok terlebih dahulu!</p>
+                        
+                        <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 mb-6 text-left shadow-sm">
+                            <h3 class="text-md font-bold text-brand-dark mb-4 border-b pb-2">📝 Data Peserta</h3>
+                            <input type="text" id="inputName" placeholder="Nama Lengkap (atau Nama Kelompok)" class="w-full mb-3 p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-brand-green" required>
+                            <input type="text" id="inputClass" placeholder="Kelas" class="w-full mb-3 p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-brand-green" required>
+                            <input type="text" id="inputSchool" placeholder="Nama Sekolah" class="w-full mb-4 p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-brand-green" required>
+                            
+                            <button onclick="submitQuizForm()" class="w-full bg-brand-green text-white font-bold py-3 rounded-lg shadow-md hover:bg-green-700 transition transform hover:-translate-y-1 text-lg">
+                                Mulai Kuis Sekarang
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Wadah Pertanyaan -->
+                    <div id="quizContainer" class="hidden">
+                        <div class="flex justify-between items-center mb-6 border-b pb-4">
+                            <span class="text-sm font-bold text-gray-500 uppercase tracking-wide">Soal <span id="qNumber">1</span> / 10</span>
+                            <span class="bg-brand-yellow text-brand-dark font-bold px-3 py-1 rounded-lg text-sm">Skor: <span id="scoreDisplay">0</span></span>
+                        </div>
+                        
+                        <div class="mb-2">
+                            <span id="qTypeBadge" class="text-xs font-bold px-2 py-1 rounded-full bg-gray-200 text-gray-700 uppercase tracking-wider">Tipe Soal</span>
+                        </div>
+                        <h3 id="questionText" class="text-xl font-bold text-brand-dark mb-6 leading-relaxed">Pertanyaan akan muncul di sini?</h3>
+                        
+                        <!-- Area Pilihan/Jawaban -->
+                        <div id="optionsContainer" class="space-y-3">
+                            <!-- Input dinamis via JS -->
+                        </div>
+                        
+                        <!-- Tombol Cek Jawaban (Khusus Soal Kompleks/DragDrop) -->
+                        <div class="mt-6 text-center">
+                            <button id="submitAnswerBtn" class="hidden bg-brand-tosca text-white font-bold py-3 px-8 rounded-full shadow-md hover:bg-teal-600 transition w-full md:w-auto">
+                                Cek Jawaban
+                            </button>
+                        </div>
+
+                        <!-- Feedback Box (Disembunyikan awalnya) -->
+                        <div id="feedbackBox" class="hidden mt-6 p-4 rounded-xl shadow-inner border-2">
+                            <div class="flex items-start gap-3">
+                                <div id="feedbackIcon" class="mt-1"></div>
+                                <div>
+                                    <h4 id="feedbackTitle" class="font-bold text-lg mb-1">Status</h4>
+                                    <p id="feedbackExplanation" class="text-gray-700 text-sm leading-relaxed">Penjelasan akan muncul di sini.</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 text-right">
+                                <button id="nextBtn" onclick="nextQuestion()" class="bg-brand-dark text-white font-bold py-2 px-6 rounded-lg hover:bg-gray-800 transition">
+                                    Soal Selanjutnya ➔
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hasil Akhir -->
+                    <div id="quizResult" class="hidden text-center py-8">
+                        <div class="text-6xl mb-4">🏆</div>
+                        <h3 class="text-2xl font-bold text-brand-dark mb-2">Kerja Bagus!</h3>
+                        <p class="text-gray-600 mb-6">Tantangan penjelajahan zat telah selesai.</p>
+                        
+                        <!-- Kartu Identitas & Skor -->
+                        <div class="bg-green-50 p-6 rounded-xl border-2 border-brand-green mb-8 inline-block w-full max-w-sm shadow-md">
+                            <div class="text-left border-b border-green-200 pb-3 mb-4 text-sm text-gray-700">
+                                <p><strong>Nama:</strong> <span id="resName"></span></p>
+                                <p><strong>Kelas:</strong> <span id="resClass"></span></p>
+                                <p><strong>Sekolah:</strong> <span id="resSchool"></span></p>
+                            </div>
+                            <p class="text-sm text-green-800 font-bold mb-1">SKOR AKHIR</p>
+                            <p id="finalScore" class="text-6xl font-extrabold text-brand-green">100</p>
+                        </div>
+                        
+                        <br>
+                        <button onclick="resetQuiz()" class="bg-brand-yellow text-brand-dark font-bold py-3 px-8 rounded-full shadow hover:bg-yellow-500 transition">
+                            Ulangi Kuis
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-brand-dark text-center py-4 text-brand-white text-sm mt-auto">
+        <p>Dirancang untuk Pembelajaran Aktif - Madrasah Tsanawiyah Provinsi Gorontalo</p>
+    </footer>
+
+    <script>
+        // --- 1. LOGIKA NAVIGASI TAB ---
+        function openTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+                btn.classList.add('text-brand-tosca', 'bg-brand-white');
+            });
+            
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+            event.currentTarget.classList.remove('text-brand-tosca', 'bg-brand-white');
+        }
+
+
+        // --- 2. LOGIKA SIMULASI KANVAS PARTIKEL ---
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        const slider = document.getElementById('tempSlider');
+        const tempDisplay = document.getElementById('tempDisplay');
+        const stateBadge = document.getElementById('stateBadge');
+        const feedbackText = document.getElementById('feedbackText');
+
+        const particles = [];
+        const numParticles = 80;
+        
+        const cols = 10;
+        const spacing = 18;
+        const startX = (canvas.width - (cols * spacing)) / 2 + 10;
+        const startY = canvas.height - (Math.ceil(numParticles/cols) * spacing) - 10;
+
+        for (let i = 0; i < numParticles; i++) {
+            const row = Math.floor(i / cols);
+            const col = i % cols;
+            particles.push({
+                baseX: startX + col * spacing,
+                baseY: startY + row * spacing,
+                x: startX + col * spacing,
+                y: startY + row * spacing,
+                vx: (Math.random() - 0.5) * 2,
+                vy: (Math.random() - 0.5) * 2,
+                color: '#60A5FA'
+            });
+        }
+
+        function drawParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const temp = parseInt(slider.value);
+            tempDisplay.innerText = temp;
+
+            let state = '';
+            let vibration = 0;
+            let speed = 0;
+
+            if (temp < 0) {
+                state = 'solid';
+                vibration = (temp + 30) * 0.05; 
+                if(vibration < 0) vibration = 0.1;
+                stateBadge.innerText = 'Padat (Es)';
+                stateBadge.style.backgroundColor = '#1D4ED8';
+                feedbackText.innerHTML = `Suhu <strong>${temp}°C</strong>. Berada di bawah titik beku air (0°C). Partikel tersusun rapat, ikatan kuat, dan hanya bergetar di tempat. Wujudnya adalah <strong>Padat</strong>.`;
+            } else if (temp >= 0 && temp < 100) {
+                state = 'liquid';
+                speed = 1 + (temp / 100) * 2; 
+                stateBadge.innerText = 'Cair (Air)';
+                stateBadge.style.backgroundColor = '#3B82F6';
+                feedbackText.innerHTML = `Suhu <strong>${temp}°C</strong>. Es telah mencair. Partikel merenggang, ikatan melemah, dan dapat bergerak bebas tetapi masih menempati volume di bagian bawah wadah. Wujudnya <strong>Cair</strong>.`;
+            } else {
+                state = 'gas';
+                speed = 4 + ((temp - 100) / 20); 
+                stateBadge.innerText = 'Gas (Uap Air)';
+                stateBadge.style.backgroundColor = '#94A3B8';
+                feedbackText.innerHTML = `Suhu <strong>${temp}°C</strong>. Mencapai titik didih (100°C). Partikel memiliki energi kinetik tinggi, bergerak sangat cepat, terpisah jauh, dan memenuhi seluruh ruangan. Wujudnya <strong>Gas</strong>.`;
+            }
+
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 6, 0, Math.PI * 2);
+                
+                if (state === 'solid') {
+                    p.x = p.baseX + (Math.random() - 0.5) * vibration;
+                    p.y = p.baseY + (Math.random() - 0.5) * vibration;
+                    ctx.fillStyle = '#93C5FD'; 
+                } 
+                else if (state === 'liquid') {
+                    p.x += p.vx * speed;
+                    p.y += p.vy * speed;
+                    
+                    if (p.x < 10 || p.x > canvas.width - 10) p.vx *= -1;
+                    if (p.y > canvas.height - 10) p.vy *= -1;
+                    if (p.y < canvas.height / 1.5) p.vy = Math.abs(p.vy); 
+                    
+                    p.x = Math.max(10, Math.min(canvas.width - 10, p.x));
+                    p.y = Math.max(canvas.height / 1.5, Math.min(canvas.height - 10, p.y));
+                    
+                    ctx.fillStyle = '#3B82F6';
+                } 
+                else if (state === 'gas') {
+                    p.x += p.vx * speed;
+                    p.y += p.vy * speed;
+                    
+                    if (p.x < 10 || p.x > canvas.width - 10) p.vx *= -1;
+                    if (p.y < 10 || p.y > canvas.height - 10) p.vy *= -1;
+                    
+                    ctx.fillStyle = '#CBD5E1';
+                }
+
+                ctx.fill();
+                ctx.closePath();
+            });
+
+            requestAnimationFrame(drawParticles);
+        }
+        
+        window.onload = function() {
+            drawParticles();
+        };
+
+
+        // --- 3. LOGIKA KUIS INTERAKTIF & MULTI-TYPE ---
+        
+        // Data Peserta
+        let studentData = { name: '', class: '', school: '' };
+
+        // Data Kuis 10 Soal
+        const quizData = [
+            {
+                type: 'pg',
+                badge: 'PILIHAN GANDA',
+                question: "Nelayan di Teluk Tomini Gorontalo sering menjemur Ikan Nike di bawah sinar matahari. Proses perubahan wujud yang membuat ikan menjadi kering adalah...",
+                options: ["Mencair", "Menguap", "Mengembun", "Menyublim"],
+                correctIndex: 1,
+                explanation: "Sinar matahari memberikan panas (kalor) pada air di dalam ikan. Air tersebut berubah dari wujud cair menjadi gas (uap air)."
+            },
+            {
+                type: 'benar_salah',
+                badge: 'BENAR ATAU SALAH',
+                question: "Pernyataan: Peristiwa membekunya air di dalam kulkas terjadi karena air tersebut 'menyerap' kalor dari mesin kulkas.",
+                options: ["BENAR", "SALAH"],
+                correctIndex: 1, // Salah
+                explanation: "Pernyataan tersebut SALAH. Air membeku menjadi es karena ia 'melepaskan' kalor (panas) ke lingkungan dalam kulkas yang lebih dingin."
+            },
+            {
+                type: 'pg_kompleks',
+                badge: 'PILIHAN GANDA KOMPLEKS (Pilih lebih dari 1)',
+                question: "Manakah dari proses perubahan wujud berikut ini yang memerlukan PENYERAPAN kalor (butuh panas)?",
+                options: ["Membeku", "Mencair", "Mengembun", "Menguap", "Mengkristal"],
+                correctIndexes: [1, 3], // Mencair & Menguap
+                explanation: "Proses yang butuh menyerap panas adalah Mencair (padat ke cair), Menguap (cair ke gas), dan Menyublim."
+            },
+            {
+                type: 'drag_drop',
+                badge: 'TARIK DAN LEPAS (DRAG & DROP)',
+                question: "Kapur barus yang diletakkan di lemari pakaian akan habis tanpa meninggalkan cairan.",
+                dropText: "Perubahan wujud dari PADAT menjadi GAS disebut...",
+                draggables: ["Mencair", "Menyublim", "Mengkristal"],
+                correctDragId: "drag_1", // Menyublim
+                explanation: "Menyublim adalah perubahan wujud dari zat padat langsung menjadi gas tanpa melalui fase cair."
+            },
+            {
+                type: 'pg',
+                badge: 'PILIHAN GANDA',
+                question: "Pakaian olahraga (jersey) yang basah karena keringat setelah senam di madrasah dijemur hingga kering. Perubahan wujud yang terjadi tergolong proses...",
+                options: ["Melepaskan panas (kalor)", "Menyerap panas (kalor)", "Menahan dingin", "Menciptakan kristal"],
+                correctIndex: 1,
+                explanation: "Untuk mengubah wujud air pada pakaian basah menjadi uap air (menguap), dibutuhkan energi dengan cara menyerap kalor matahari."
+            },
+            {
+                type: 'benar_salah',
+                badge: 'BENAR ATAU SALAH',
+                question: "Pernyataan: Proses terbentuknya titik-titik air embun di pagi hari merupakan contoh perubahan wujud dari Gas menjadi Cair.",
+                options: ["BENAR", "SALAH"],
+                correctIndex: 0, // Benar
+                explanation: "Pernyataan tersebut BENAR. Suhu dingin pagi hari membuat uap air (gas) di udara melepaskan kalor dan menjadi cair (mengembun)."
+            },
+            {
+                type: 'pg_kompleks',
+                badge: 'PILIHAN GANDA KOMPLEKS (Pilih lebih dari 1)',
+                question: "Pilihlah zat-zat di bawah ini yang partikelnya memiliki sifat: 'Jarak agak renggang, bergerak bebas tapi terbatas, dan mengikuti bentuk wadahnya'.",
+                options: ["Asap pembakaran sampah", "Air Sirup", "Batu kapur", "Minyak goreng kelapa"],
+                correctIndexes: [1, 3], // Air Sirup, Minyak goreng
+                explanation: "Sifat tersebut adalah ciri-ciri wujud CAIR. Air sirup dan minyak goreng adalah benda cair."
+            },
+            {
+                type: 'drag_drop',
+                badge: 'TARIK DAN LEPAS (DRAG & DROP)',
+                question: "Pembuatan es balok di pelabuhan pelelangan ikan Kota Gorontalo membutuhkan mesin pendingin bertenaga besar.",
+                dropText: "Perubahan wujud dari CAIR menjadi PADAT disebut...",
+                draggables: ["Mengembun", "Membeku", "Menguap"],
+                correctDragId: "drag_1", // Membeku
+                explanation: "Proses cair menjadi padat akibat pelepasan kalor (pendinginan) disebut Membeku."
+            },
+            {
+                type: 'pg',
+                badge: 'PILIHAN GANDA',
+                question: "Andi membeli es potong saat panas terik, namun es tersebut cepat berair menetes ke tangannya. Proses ini terjadi karena...",
+                options: ["Es menerima kalor dari lingkungan", "Es melepas kalor ke lingkungan", "Es menyerap dingin dari udara", "Volume es menyusut mendadak"],
+                correctIndex: 0,
+                explanation: "Es (padat) akan mencair saat ia menerima/menyerap kalor (panas) dari udara sekitarnya yang terik."
+            },
+            {
+                type: 'pg_kompleks',
+                badge: 'PILIHAN GANDA KOMPLEKS (Pilih lebih dari 1)',
+                question: "Berdasarkan simulasi laboratorium virtual, apa yang terjadi pada partikel air ketika dipanaskan hingga melebihi suhu 100°C?",
+                options: ["Ikatan antar partikel sangat kuat", "Partikel bergerak sangat cepat", "Berubah menjadi gas (uap)", "Hanya diam dan bergetar"],
+                correctIndexes: [1, 2],
+                explanation: "Di atas suhu didih 100°C, air berubah wujud menjadi Gas. Energi partikel sangat tinggi sehingga bergerak sangat cepat menjauhi satu sama lain."
+            }
+        ];
+
+        let currentQIndex = 0;
+        let score = 0;
+        let canAnswer = true;
+        const POINTS_PER_Q = 10;
+
+        const quizStart = document.getElementById('quizStart');
+        const quizContainer = document.getElementById('quizContainer');
+        const quizResult = document.getElementById('quizResult');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const questionText = document.getElementById('questionText');
+        const qNumber = document.getElementById('qNumber');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const feedbackBox = document.getElementById('feedbackBox');
+        const submitAnswerBtn = document.getElementById('submitAnswerBtn');
+        const qTypeBadge = document.getElementById('qTypeBadge');
+
+        // Fungsi Validasi & Mulai Kuis
+        function submitQuizForm() {
+            const name = document.getElementById('inputName').value.trim();
+            const kelas = document.getElementById('inputClass').value.trim();
+            const school = document.getElementById('inputSchool').value.trim();
+
+            if(!name || !kelas || !school) {
+                alert("Harap lengkapi semua data peserta terlebih dahulu!");
+                return;
+            }
+
+            studentData = { name, class: kelas, school };
+            
+            quizStart.classList.add('hidden');
+            quizContainer.classList.remove('hidden');
+            currentQIndex = 0;
+            score = 0;
+            updateScoreDisplay();
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            canAnswer = true;
+            feedbackBox.classList.add('hidden');
+            submitAnswerBtn.classList.add('hidden');
+            
+            const q = quizData[currentQIndex];
+            qNumber.innerText = currentQIndex + 1;
+            questionText.innerText = q.question;
+            qTypeBadge.innerText = q.badge;
+            
+            // Atur warna badge tipe soal
+            if(q.type === 'pg') qTypeBadge.className = "text-xs font-bold px-2 py-1 rounded bg-blue-100 text-blue-700";
+            if(q.type === 'benar_salah') qTypeBadge.className = "text-xs font-bold px-2 py-1 rounded bg-purple-100 text-purple-700";
+            if(q.type === 'pg_kompleks') qTypeBadge.className = "text-xs font-bold px-2 py-1 rounded bg-orange-100 text-orange-700";
+            if(q.type === 'drag_drop') qTypeBadge.className = "text-xs font-bold px-2 py-1 rounded bg-pink-100 text-pink-700";
+            
+            optionsContainer.innerHTML = '';
+            
+            // 1. RENDER PG & BENAR/SALAH
+            if (q.type === 'pg' || q.type === 'benar_salah') {
+                q.options.forEach((opt, index) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'quiz-btn w-full text-left bg-gray-50 hover:bg-brand-tosca hover:text-white border-2 border-gray-200 text-gray-800 font-bold py-3 px-5 rounded-xl transition duration-200';
+                    btn.innerText = (q.type === 'pg' ? String.fromCharCode(65 + index) + ". " : "") + opt;
+                    btn.onclick = () => checkAnswerPG(index, btn);
+                    optionsContainer.appendChild(btn);
+                });
+            } 
+            
+            // 2. RENDER PG KOMPLEKS (Checkboxes)
+            else if (q.type === 'pg_kompleks') {
+                q.options.forEach((opt, index) => {
+                    const label = document.createElement('label');
+                    label.className = 'flex items-center gap-3 w-full bg-gray-50 hover:bg-gray-100 border-2 border-gray-200 text-gray-800 font-semibold py-3 px-5 rounded-xl cursor-pointer transition duration-200';
+                    
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.value = index;
+                    checkbox.className = 'w-6 h-6 text-brand-tosca border-gray-300 rounded cursor-pointer';
+                    
+                    const text = document.createElement('span');
+                    text.innerText = opt;
+                    
+                    label.appendChild(checkbox);
+                    label.appendChild(text);
+                    optionsContainer.appendChild(label);
+                });
+                
+                submitAnswerBtn.classList.remove('hidden');
+                submitAnswerBtn.onclick = () => checkAnswerKompleks();
+            }
+
+            // 3. RENDER DRAG & DROP
+            else if (q.type === 'drag_drop') {
+                // Sumber drag
+                const dragContainer = document.createElement('div');
+                dragContainer.className = 'flex flex-wrap gap-3 mb-6 p-4 bg-gray-100 rounded-xl justify-center shadow-inner';
+                dragContainer.id = 'dragSource';
+                
+                q.draggables.forEach((item, index) => {
+                    const dragItem = document.createElement('div');
+                    dragItem.id = 'drag_' + index;
+                    dragItem.draggable = true;
+                    dragItem.ondragstart = drag;
+                    dragItem.className = 'bg-white border-2 border-brand-yellow px-4 py-2 rounded-lg cursor-grab font-bold text-brand-dark shadow-sm hover:bg-yellow-50 active:cursor-grabbing';
+                    dragItem.innerText = item;
+                    dragContainer.appendChild(dragItem);
+                });
+                
+                // Area Drop
+                const dropArea = document.createElement('div');
+                dropArea.className = 'text-center bg-white p-6 rounded-xl border-2 border-gray-200 shadow-sm';
+                
+                const dropInstruction = document.createElement('p');
+                dropInstruction.className = 'mb-4 font-bold text-gray-800 text-lg';
+                dropInstruction.innerText = q.dropText;
+                
+                const dropzone = document.createElement('div');
+                dropzone.id = 'dropzone';
+                dropzone.ondrop = drop;
+                dropzone.ondragover = allowDrop;
+                dropzone.ondragleave = dragLeave;
+                dropzone.className = 'border-4 border-dashed border-brand-tosca bg-green-50 rounded-lg h-16 flex items-center justify-center p-2 w-full max-w-xs mx-auto transition-colors duration-200';
+                dropzone.innerHTML = '<span class="text-gray-400 font-semibold text-sm pointer-events-none">Tarik dan lepas label di sini</span>';
+                
+                dropArea.appendChild(dropInstruction);
+                dropArea.appendChild(dropzone);
+                
+                optionsContainer.appendChild(dragContainer);
+                optionsContainer.appendChild(dropArea);
+                
+                submitAnswerBtn.classList.remove('hidden');
+                submitAnswerBtn.onclick = () => checkAnswerDragDrop();
+            }
+        }
+
+        // --- Logika Drag and Drop Event Handlers ---
+        function allowDrop(ev) {
+            ev.preventDefault();
+            if(ev.target.id === 'dropzone') {
+                ev.target.classList.add('bg-green-100', 'border-green-500');
+            }
+        }
+        function dragLeave(ev) {
+            if(ev.target.id === 'dropzone') {
+                ev.target.classList.remove('bg-green-100', 'border-green-500');
+            }
+        }
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+        }
+        function drop(ev) {
+            ev.preventDefault();
+            let dropTarget = ev.target;
+            
+            // Pastikan drop di dalam area dropzone
+            if(dropTarget.id !== 'dropzone') {
+                dropTarget = dropTarget.closest('#dropzone');
+            }
+            
+            if (dropTarget) {
+                dropTarget.classList.remove('bg-green-100', 'border-green-500');
+                var data = ev.dataTransfer.getData("text");
+                var draggedEl = document.getElementById(data);
+                
+                if(!draggedEl) return;
+
+                // Hapus teks placeholder
+                const placeholder = dropTarget.querySelector('span');
+                if(placeholder) placeholder.remove();
+                
+                // Jika sudah ada item, kembalikan item lama ke source
+                if(dropTarget.children.length > 0) {
+                    document.getElementById('dragSource').appendChild(dropTarget.firstElementChild);
+                }
+                
+                dropTarget.appendChild(draggedEl);
+            }
+        }
+
+        // --- Logika Pengecekan Jawaban ---
+        function displayFeedback(isCorrect) {
+            const q = quizData[currentQIndex];
+            feedbackBox.classList.remove('hidden');
+            feedbackBox.classList.remove('border-green-500', 'bg-green-50', 'border-red-500', 'bg-red-50');
+            
+            if (isCorrect) {
+                score += POINTS_PER_Q;
+                updateScoreDisplay();
+                feedbackBox.classList.add('border-green-500', 'bg-green-50');
+                document.getElementById('feedbackTitle').innerText = "Tepat Sekali! 🎉";
+                document.getElementById('feedbackTitle').className = "font-bold text-lg mb-1 text-green-700";
+                document.getElementById('feedbackIcon').innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`;
+            } else {
+                feedbackBox.classList.add('border-red-500', 'bg-red-50');
+                document.getElementById('feedbackTitle').innerText = "Kurang Tepat, Coba Pahami Ini 💡";
+                document.getElementById('feedbackTitle').className = "font-bold text-lg mb-1 text-red-700";
+                document.getElementById('feedbackIcon').innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`;
+            }
+            
+            document.getElementById('feedbackExplanation').innerText = q.explanation;
+            submitAnswerBtn.classList.add('hidden');
+            
+            const nextBtn = document.getElementById('nextBtn');
+            if (currentQIndex === quizData.length - 1) {
+                nextBtn.innerText = "Lihat Skor Akhir 🏆";
+                nextBtn.className = "bg-brand-yellow text-brand-dark font-bold py-2 px-6 rounded-lg hover:bg-yellow-500 transition shadow";
+            } else {
+                nextBtn.innerText = "Soal Selanjutnya ➔";
+                nextBtn.className = "bg-brand-dark text-white font-bold py-2 px-6 rounded-lg hover:bg-gray-800 transition shadow";
+            }
+        }
+
+        function checkAnswerPG(selectedIndex, selectedBtn) {
+            if (!canAnswer) return;
+            canAnswer = false;
+            const q = quizData[currentQIndex];
+            const isCorrect = (selectedIndex === q.correctIndex);
+            
+            const allBtns = optionsContainer.querySelectorAll('button');
+            allBtns.forEach((btn, idx) => {
+                btn.classList.remove('hover:bg-brand-tosca', 'hover:text-white');
+                btn.style.cursor = 'default';
+                
+                if (idx === q.correctIndex) {
+                    btn.classList.add('bg-green-100', 'border-green-500', 'text-green-800');
+                } else if (idx === selectedIndex && !isCorrect) {
+                    btn.classList.add('bg-red-100', 'border-red-500', 'text-red-800');
+                } else {
+                    btn.classList.add('opacity-50');
+                }
+            });
+            displayFeedback(isCorrect);
+        }
+
+        function checkAnswerKompleks() {
+            if (!canAnswer) return;
+            
+            const checkboxes = optionsContainer.querySelectorAll('input[type="checkbox"]');
+            let selectedIndexes = [];
+            checkboxes.forEach(cb => {
+                if(cb.checked) selectedIndexes.push(parseInt(cb.value));
+            });
+
+            if(selectedIndexes.length === 0) {
+                alert("Pilih setidaknya satu jawaban!");
+                return;
+            }
+
+            canAnswer = false;
+            const q = quizData[currentQIndex];
+            
+            // Sort array agar gampang dibandingkan
+            selectedIndexes.sort();
+            let correctArr = [...q.correctIndexes].sort();
+            
+            // Cek apakah array sama persis
+            const isCorrect = JSON.stringify(selectedIndexes) === JSON.stringify(correctArr);
+
+            // Styling opsi
+            checkboxes.forEach(cb => {
+                cb.disabled = true;
+                const val = parseInt(cb.value);
+                const label = cb.parentElement;
+                
+                if (correctArr.includes(val)) {
+                    label.classList.add('bg-green-100', 'border-green-500'); // Benar harusnya ini
+                } else if (selectedIndexes.includes(val) && !correctArr.includes(val)) {
+                    label.classList.add('bg-red-100', 'border-red-500'); // Salah pilih
+                } else {
+                    label.classList.add('opacity-50');
+                }
+            });
+
+            displayFeedback(isCorrect);
+        }
+
+        function checkAnswerDragDrop() {
+            if (!canAnswer) return;
+            
+            const dropzone = document.getElementById('dropzone');
+            if (dropzone.children.length === 0 || dropzone.firstElementChild.tagName === 'SPAN') {
+                alert("Silakan tarik sebuah label ke dalam kotak terlebih dahulu!");
+                return;
+            }
+
+            canAnswer = false;
+            const q = quizData[currentQIndex];
+            const droppedId = dropzone.firstElementChild.id;
+            
+            const isCorrect = (droppedId === q.correctDragId);
+
+            // Kunci semua draggables
+            document.querySelectorAll('.draggable, [id^="drag_"]').forEach(el => {
+                el.draggable = false;
+                el.classList.remove('cursor-grab', 'hover:bg-yellow-50');
+                el.classList.add('opacity-60', 'cursor-not-allowed');
+            });
+
+            // Styling dropzone hasil
+            dropzone.classList.remove('border-brand-tosca', 'border-dashed');
+            if (isCorrect) {
+                dropzone.classList.add('border-solid', 'border-green-500', 'bg-green-100');
+            } else {
+                dropzone.classList.add('border-solid', 'border-red-500', 'bg-red-100');
+            }
+
+            displayFeedback(isCorrect);
+        }
+
+        // --- Navigasi & Hasil Akhir ---
+        function nextQuestion() {
+            currentQIndex++;
+            if (currentQIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            quizContainer.classList.add('hidden');
+            quizResult.classList.remove('hidden');
+            
+            // Set Data Peserta
+            document.getElementById('resName').innerText = studentData.name;
+            document.getElementById('resClass').innerText = studentData.class;
+            document.getElementById('resSchool').innerText = studentData.school;
+
+            const finalScoreEl = document.getElementById('finalScore');
+            finalScoreEl.innerText = score;
+            
+            if (score === 100) {
+                finalScoreEl.className = "text-6xl font-extrabold text-brand-green";
+            } else if (score >= 60) {
+                finalScoreEl.className = "text-6xl font-extrabold text-brand-yellow";
+            } else {
+                finalScoreEl.className = "text-6xl font-extrabold text-red-500";
+            }
+        }
+
+        function resetQuiz() {
+            quizResult.classList.add('hidden');
+            // Kembali ke layar input data (opsional, jika ingin mereset data)
+            // quizStart.classList.remove('hidden');
+            // Atau langsung restart dengan data sama:
+            currentQIndex = 0;
+            score = 0;
+            updateScoreDisplay();
+            quizContainer.classList.remove('hidden');
+            loadQuestion();
+        }
+
+        function updateScoreDisplay() {
+            scoreDisplay.innerText = score;
+            scoreDisplay.classList.add('scale-150', 'text-brand-green');
+            setTimeout(() => {
+                scoreDisplay.classList.remove('scale-150', 'text-brand-green');
+            }, 300);
+        }
+
+    </script>
+</body>
+</html>
